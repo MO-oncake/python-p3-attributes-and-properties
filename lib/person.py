@@ -16,40 +16,38 @@ APPROVED_JOBS = [
 ]
 
 class Person:
-    APPROVED_JOBS = APPROVED_JOBS
+    _name = None
+    _job = None
 
-    def __init__(self, name = None, job = None):
-        # Validate name
-        self._name = None
-        if name is not None:
-            self.name = name  # Use property setter to validate
+    def __init__(self, new_name = None, new_job = None):
+        # new_name: what the caller is trying to set the name to
+        # self._name: the actual name of the person
+        # self.name: A property which has validation before actually setting _name
 
-        # Validate job
-        self._job = None
-        if job is not None:
-            self.job = job  # Use property setter to validate
 
-    @property
-    def name(self):
+        if new_name is not None:
+            self.name = new_name
+
+        if new_job is not None:
+            self.job = new_job
+
+    def get_name(self):
         return self._name
-
-    @name.setter
-    def name(self, value):
-        if value == "":
-            print("Name must be string between 1 and 25 characters.")
-        elif not isinstance(value, str) or not (1 <= len(value) <= 25):
-            print("Name must be string between 1 and 25 characters.")
+    
+    def set_name(self, name):
+        if type(name) == str and 1 <= len(name) <= 25:
+            self._name = name.title()
         else:
-            self._name = value.title()
+            print("Name must be string between 1 and 25 characters.")
 
-    @property
-    def job(self):
+    def get_job(self):
         return self._job
-
-    @job.setter
-    def job(self, value):
-        if value not in Person.APPROVED_JOBS:
-            print("Job must be in list of approved jobs.")
+    
+    def set_job(self, job):
+        if job in APPROVED_JOBS:
+            self._job = job
         else:
-            self._job = value
-            
+            print("Job must be in list of approved jobs.")
+
+    name = property(get_name, set_name)
+    job = property(get_job, set_job)

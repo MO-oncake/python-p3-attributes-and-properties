@@ -12,39 +12,48 @@ APPROVED_BREEDS = [
 ]
 
 class Dog:
-    APPROVED_BREEDS = APPROVED_BREEDS
 
-    def __init__(self, name = None, breed = None):
-        # Validate name
-        self._name = None
-        if name is not None:
-            self.name = name  # Use property setter to validate
+    _name = None
+    _breed = None
 
-        # Validate breed
-        self._breed = None
-        if breed is not None:
-            self.breed = breed  # Use property setter to validate
+    def __init__(self, new_name = None, new_breed = None):
+        # new_name: what the caller is trying to set the name to
+        # self._name: the actual name of the person
+        # self.name: A property which has validation before actually setting _name
+        if new_name is not None:
+            self.name = new_name
+        
+        if new_breed is not None:
+            self.breed = new_breed
 
-    @property
-    def name(self):
+    def get_name(self):
         return self._name
-
-    @name.setter
-    def name(self, value):
-        if value == "":
-            print("Name must be string between 1 and 25 characters.")
-        elif not isinstance(value, str) or not (1 <= len(value) <= 25):
-            print("Name must be string between 1 and 25 characters.")
+    
+    def set_name(self, name):
+        if type(name) == str and 1 <= len(name) <= 25:
+            self._name = name
         else:
-            self._name = value.title()
+            print("Name must be string between 1 and 25 characters.")
 
-    @property
-    def breed(self):
+    def get_breed(self):
         return self._breed
-
-    @breed.setter
-    def breed(self, value):
-        if value not in Dog.APPROVED_BREEDS:
-            print("Breed must be in list of approved breeds.")
+    
+    def set_breed(self, breed):
+        if breed in APPROVED_BREEDS:
+            self._breed = breed
         else:
-            self._breed = value
+            print("Breed must be in list of approved breeds.")
+
+    
+    name = property(get_name, set_name)
+    breed = property(get_breed, set_breed)
+
+
+
+Dog(new_name="")
+
+your_output = "Name must be string between 1 and 25 characters.\nBreed must be in list of approved breeds."
+
+expected_output = "Name must be string between 1 and 25 characters."
+
+your_output == expected_output
